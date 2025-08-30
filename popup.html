@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Page Summarizer</title>
+  <style>
+    body { width: 300px; padding: 10px; font-family: Arial, sans-serif; }
+    input { width: 100%; margin-bottom: 10px; padding: 5px; }
+    button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    #summary { margin-top: 10px; white-space: pre-wrap; border: 1px solid #ccc; padding: 5px; min-height: 100px; }
+  </style>
+</head>
+<body>
+  <h3>Summarize Current Page</h3>
+  <input type="password" id="apiKey" placeholder="Enter OpenAI API Key">
+  <div style="display:flex; gap:6px; margin-bottom:10px;">
+    <button id="saveKeyBtn" style="flex:1; padding:8px; background:#28a745; color:white; border:none; cursor:pointer;">Save Key</button>
+    <button id="clearKeyBtn" style="flex:1; padding:8px; background:#dc3545; color:white; border:none; cursor:pointer;">Clear Key</button>
+  </div>
+  <div id="status" style="font-size:12px;color:#666;margin-bottom:6px;"></div>
+  <button id="summarizeBtn">Summarize</button>
+  <div id="summary"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
