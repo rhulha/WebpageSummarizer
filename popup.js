@@ -3,6 +3,7 @@ const STORAGE_KEY = 'openai_api_key';
 document.getElementById('summarizeBtn').addEventListener('click', summarize);
 document.getElementById('saveKeyBtn').addEventListener('click', saveApiKey);
 document.getElementById('clearKeyBtn').addEventListener('click', clearApiKey);
+document.getElementById('generateTitleBtn').addEventListener('click', generateTitle);
 
 // Load key on open
 function loadApiKeyToUI() {
@@ -37,6 +38,39 @@ function setStatus(msg, isError = false) {
 }
 
 loadApiKeyToUI();
+
+async function generateTitle() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    setStatus('Please enter your OpenAI API key.', true);
+    return;
+  }
+  const summaryText = document.getElementById('summary').textContent.trim();
+  if (!summaryText) {
+    setStatus('No summary text to generate a title from.', true);
+    return;
+  }
+  const titleEl = document.getElementById('titleOutput');
+  titleEl.textContent = 'Generating title...';
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: "Generate a single short polemic and provocative title for the following text. Reply with only the title, no quotes or extra text. Use the same language as the following text:\n" + summaryText }]
+      })
+    });
+    if (!response.ok) throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    const data = await response.json();
+    titleEl.textContent = data.choices[0].message.content.trim();
+  } catch (error) {
+    titleEl.textContent = `Error: ${error.message}`;
+  }
+}
 
 async function summarize() {
   const apiKey = document.getElementById('apiKey').value.trim();

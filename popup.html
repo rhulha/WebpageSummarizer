@@ -3,11 +3,11 @@
 <head>
   <title>Web Page Summarizer</title>
   <style>
-    body { width: 300px; padding: 10px; font-family: Arial, sans-serif; }
+    body { width: 480px; padding: 14px; font-family: Arial, sans-serif; font-size: 15px; }
     input { width: 100%; margin-bottom: 10px; padding: 5px; }
     button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     button:hover { background-color: #0056b3; }
-    #summary { margin-top: 10px; white-space: pre-wrap; border: 1px solid #ccc; padding: 5px; min-height: 100px; }
+    #summary { margin-top: 10px; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; min-height: 200px; font-size: 15px; }
   </style>
 </head>
 <body>
@@ -19,6 +19,8 @@
   </div>
   <div id="status" style="font-size:12px;color:#666;margin-bottom:6px;"></div>
   <button id="summarizeBtn">Summarize</button>
+  <div id="titleOutput" style="margin-top:10px; font-size:15px; font-weight:bold; min-height:1.4em;"></div>
+  <button id="generateTitleBtn" style="margin-top:6px; background:#6f42c1;">Generate Title</button>
   <div id="summary"></div>
   <script src="popup.js"></script>
 </body>
