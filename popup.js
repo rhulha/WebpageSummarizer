@@ -4,6 +4,10 @@ document.getElementById('summarizeBtn').addEventListener('click', summarize);
 document.getElementById('saveKeyBtn').addEventListener('click', saveApiKey);
 document.getElementById('clearKeyBtn').addEventListener('click', clearApiKey);
 document.getElementById('generateTitleBtn').addEventListener('click', generateTitle);
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('summary').textContent;
+  if (text) navigator.clipboard.writeText(text);
+});
 
 // Load key on open
 function loadApiKeyToUI() {
