@@ -1,6 +1,9 @@
 const STORAGE_KEY = 'openai_api_key';
+let articleText = '';
 
 document.getElementById('summarizeBtn').addEventListener('click', summarize);
+document.getElementById('chatSendBtn').addEventListener('click', sendChat);
+document.getElementById('chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
 document.getElementById('saveKeyBtn').addEventListener('click', saveApiKey);
 document.getElementById('clearKeyBtn').addEventListener('click', clearApiKey);
 document.getElementById('generateTitleBtn').addEventListener('click', generateTitle);
@@ -14,7 +17,7 @@ function loadApiKeyToUI() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     document.getElementById('apiKey').value = saved;
-    setStatus('Loaded saved API key.');
+    //setStatus('Loaded saved API key.');
   }
 }
 
@@ -74,6 +77,54 @@ async function generateTitle() {
   } catch (error) {
     titleEl.textContent = `Error: ${error.message}`;
   }
+}
+
+async function sendChat() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { setStatus('Please enter your OpenAI API key.', true); return; }
+  if (!articleText) { setStatus('Summarize a page first to load the article.', true); return; }
+
+  const input = document.getElementById('chatInput');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const messagesEl = document.getElementById('chat-messages');
+  const userEl = document.createElement('div');
+  userEl.className = 'chat-msg-user';
+  userEl.textContent = 'You: ' + question;
+  messagesEl.appendChild(userEl);
+  input.value = '';
+
+  const btn = document.getElementById('chatSendBtn');
+  btn.disabled = true;
+
+  const replyEl = document.createElement('div');
+  replyEl.className = 'chat-msg-assistant';
+  replyEl.textContent = '…';
+  messagesEl.appendChild(replyEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "Answer questions about the following article:\n\n" + articleText },
+          { role: "user", content: question }
+        ]
+      })
+    });
+    if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+    const data = await response.json();
+    replyEl.textContent = data.choices[0].message.content.trim();
+  } catch (err) {
+    replyEl.textContent = 'Error: ' + err.message;
+  }
+
+  btn.disabled = false;
+  messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
 async function summarize() {
@@ -144,7 +195,7 @@ async function summarize() {
     if (!result || !result[0] || typeof result[0].result !== 'string') {
       throw new Error('Failed to extract page text (executeScript returned no result).');
     }
-    const text = result[0].result;
+    articleText = result[0].result;
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -154,7 +205,7 @@ async function summarize() {
       body: JSON.stringify({
     // Use a stable model name by default
     model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: "Summarize this:\n" + text }]
+        messages: [{ role: "user", content: "Summarize this:\n" + articleText }]
       })
     });
     if (!response.ok) {

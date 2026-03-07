@@ -8,14 +8,23 @@
     button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     button:hover { background-color: #0056b3; }
     #summary { margin-top: 10px; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; min-height: 200px; font-size: 15px; }
+    #chat-section { margin-top: 14px; border-top: 1px solid #ccc; padding-top: 10px; }
+    #chat-messages { min-height: 60px; max-height: 220px; overflow-y: auto; margin-bottom: 8px; font-size: 14px; }
+    .chat-msg-user { color: #007bff; margin: 4px 0; }
+    .chat-msg-assistant { color: #222; margin: 4px 0; white-space: pre-wrap; }
+    #chat-input-row { display: flex; gap: 6px; }
+    #chatInput { flex: 1; width: auto; margin-bottom: 0; padding: 5px; font-size: 14px; }
+    #chatSendBtn { width: auto; padding: 5px 12px; background: #007bff; color: white; border: none; cursor: pointer; white-space: nowrap; }
+    #chatSendBtn:hover { background: #0056b3; }
+    #chatSendBtn:disabled { background: #aaa; cursor: default; }
   </style>
 </head>
 <body>
   <h3>Summarize Current Page</h3>
-  <input type="password" id="apiKey" placeholder="Enter OpenAI API Key">
-  <div style="display:flex; gap:6px; margin-bottom:10px;">
-    <button id="saveKeyBtn" style="flex:1; padding:8px; background:#28a745; color:white; border:none; cursor:pointer;">Save Key</button>
-    <button id="clearKeyBtn" style="flex:1; padding:8px; background:#dc3545; color:white; border:none; cursor:pointer;">Clear Key</button>
+  <div style="display:flex; gap:6px; margin-bottom:10px; align-items:center;">
+    <input type="password" id="apiKey" placeholder="Enter OpenAI API Key" style="flex:1; margin-bottom:0;">
+    <button id="saveKeyBtn" style="width:auto; padding:5px 9px; background:#28a745; color:white; border:none; cursor:pointer; font-size:15px;">Save</button>
+    <button id="clearKeyBtn" style="width:auto; padding:5px 9px; background:#dc3545; color:white; border:none; cursor:pointer; font-size:15px;">Clear</button>
   </div>
   <div id="status" style="font-size:12px;color:#666;margin-bottom:6px;"></div>
   <button id="generateTitleBtn" style="background:#6f42c1;">Generate Title</button>
@@ -24,6 +33,13 @@
   <div style="position:relative;">
     <button id="copyBtn" style="position:absolute; top:4px; right:4px; width:auto; padding:2px 7px; font-size:11px; background:#555; z-index:1;">copy</button>
     <div id="summary"></div>
+  </div>
+  <div id="chat-section">
+    <div id="chat-messages"></div>
+    <div id="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Ask a question about the article...">
+      <button id="chatSendBtn">Ask</button>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
