@@ -15,6 +15,8 @@ A Chrome extension that summarizes the content of the current web page using Ope
 1. Click on the extension icon in the Chrome toolbar.
 2. Enter your OpenAI API key in the input field.
 3. Click "Summarize" to get a summary of the current page.
+4. Click "Get Title" to generate a suggested title for the current page.
+5. Use the chat input at the bottom to ask follow-up questions about the page content.
 
 ## Note
 
